@@ -1,17 +1,21 @@
-import { Table, Column, Model, Max, Min, NotNull } from 'sequelize-typescript';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  Unique,
+  AllowNull,
+} from 'sequelize-typescript';
 
 @Table
 export class User extends Model {
   
-  @Max(20)
-  @Min(4)
-  @NotNull
-  @Column
+  @Unique
+  @AllowNull(false)
+  @Column(DataType.STRING(20))
   name: string;
 
-  @Max(20)
-  @Min(4)
-  @NotNull
-  @Column
+  @AllowNull(false)
+  @Column(DataType.STRING)
   password: string;
 }
