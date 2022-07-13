@@ -4,9 +4,11 @@ import {
   Get,
   HttpCode,
   Post,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { CreateUserDto, LoginDto } from './dto/index.dto';
 import { User } from './entities/user.entity';
@@ -22,12 +24,15 @@ export class AuthController {
 
   @Post('login')
   @HttpCode(200)
-  async login(@Body() req: LoginDto): Promise<{ token: string }> {
-    return this.authService.login({ ...req });
+  async login(
+    @Body() req: LoginDto,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<{ message: string }> {
+    return this.authService.login({ ...req }, res);
   }
 
-  @UseGuards(AuthGuard('jwt'))
   @Get('hello')
+  @UseGuards(AuthGuard('jwt'))
   async hello(): Promise<string> {
     return 'Hello World!';
   }
