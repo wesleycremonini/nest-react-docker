@@ -1,4 +1,5 @@
-import { IsNotEmpty, IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
+import { Type } from 'class-transformer';
+import { ArrayNotEmpty, IsArray, IsNotEmpty, IsNumber, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateRecipeDto {
 
@@ -14,10 +15,11 @@ export class CreateRecipeDto {
   @MaxLength(255, { message: "Descrição deve ter no máximo 255 caracteres." })
   description: string;
 
-  @IsNotEmpty({ message: "Descrição é obrigatório." })
-  image: File; // TODO: fix this
 
   @IsNotEmpty({ message: "Descrição é obrigatório." })
+  @IsArray({ message: "Ingredientes deve ser um array." })
+  @IsString({ each: true, message: "Ingredientes contém caracteres inválidos." })
+  @ArrayNotEmpty({ message: "Ingredientes devem ser informados." })
   ingredients: string[];
 
   @IsString({ message: "Instruções contém caracteres inválidos." })
@@ -27,9 +29,13 @@ export class CreateRecipeDto {
   instructions: string;
 
   @IsNumber()
+  @Type(() => Number)
   @IsNotEmpty({ message: "Categoria é obrigatório." })
+  @IsPositive({ message: "Categoria deve ser um número positivo." })
   category: number;
 
   @IsNotEmpty({ message: "Tags é obrigatório." })
+  @IsArray({ message: "Tags deve ser um array." })
+  @ArrayNotEmpty({ message: "Tags devem ser informadas." })
   tags: number[];
 }

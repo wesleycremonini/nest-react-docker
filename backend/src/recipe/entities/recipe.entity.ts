@@ -28,6 +28,7 @@ export class Recipe extends Model {
   @Column(DataType.TEXT)
   description: string;
 
+  // nome do arquivo da imagem
   @AllowNull(false)
   @Column(DataType.STRING)
   image: string;

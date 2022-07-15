@@ -1,15 +1,20 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { RecipeService } from './recipe.service';
 import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ImageValidationPipe } from './dto/imageValidation.pipe';
 
-@Controller('recipe')
+@Controller('recipes')
 export class RecipeController {
   constructor(private readonly recipeService: RecipeService) {}
 
-  @Post()
-  create(@Body() createRecipeDto: CreateRecipeDto) {
-    return this.recipeService.create(createRecipeDto);
+  @Post('test')
+  @UseInterceptors(FileInterceptor('image'))
+  create(@Body() createRecipeDto: CreateRecipeDto, @UploadedFile(new ImageValidationPipe) image: unknown) {
+    console.log(image)
+    console.log(createRecipeDto)
+    return; // continaur aqui
   }
 
   @Get()
