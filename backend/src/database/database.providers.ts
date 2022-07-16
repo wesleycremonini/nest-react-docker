@@ -16,7 +16,7 @@ export const databaseProviders = [
         database: 'db',
       });
       sequelize.addModels([User, Recipe]);
-      await sequelize.sync({ force: true });
+      await sequelize.sync();
       return sequelize;
     },
   },
