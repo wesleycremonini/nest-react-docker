@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer';
-import { ArrayNotEmpty, IsArray, IsNotEmpty, IsNumber, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsPositive, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateRecipeDto {
 
@@ -17,10 +17,8 @@ export class CreateRecipeDto {
 
 
   @IsNotEmpty({ message: "Descrição é obrigatório." })
-  @IsArray({ message: "Ingredientes deve ser um array." })
   @IsString({ each: true, message: "Ingredientes contém caracteres inválidos." })
-  @ArrayNotEmpty({ message: "Ingredientes devem ser informados." })
-  ingredients: string[];
+  ingredients: string;
 
   @IsString({ message: "Instruções contém caracteres inválidos." })
   @IsNotEmpty({ message: "Instruções é obrigatório." })
@@ -35,7 +33,5 @@ export class CreateRecipeDto {
   category: number;
 
   @IsNotEmpty({ message: "Tags é obrigatório." })
-  @IsArray({ message: "Tags deve ser um array." })
-  @ArrayNotEmpty({ message: "Tags devem ser informadas." })
-  tags: number[];
+  tags: string;
 }
