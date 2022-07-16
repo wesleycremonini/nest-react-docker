@@ -34,8 +34,8 @@ export class Recipe extends Model {
   image: string;
 
   @AllowNull(false)
-  @Column(DataType.JSON)
-  ingredients: string[];
+  @Column(DataType.STRING)
+  ingredients: string; // "arroz|feijão|farinha de trigo"
 
   @AllowNull(false)
   @Column(DataType.TEXT)
@@ -46,6 +46,6 @@ export class Recipe extends Model {
   category: number;
 
   @AllowNull(false)
-  @Column(DataType.JSON)
-  tags: number[];
+  @Column(DataType.STRING)
+  tags: string; // "1|2|3"
 }
