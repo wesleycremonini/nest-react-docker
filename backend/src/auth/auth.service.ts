@@ -20,7 +20,7 @@ export class AuthService {
   ) {}
 
   async register(user: CreateUserDto): Promise<void | User> {
-    const salt = await bcrypt.genSalt();
+    const salt: string = await bcrypt.genSalt();
     user.password = await bcrypt.hash(user.password, salt);
 
     return await this.usersRepository.create({ ...user }).catch((err) => {
@@ -38,7 +38,7 @@ export class AuthService {
     @Res({ passthrough: true }) res: Response,
   ): Promise<{ message: string }> {
     
-    const user = await this.usersRepository.findOne({
+    const user: User = await this.usersRepository.findOne({
       where: { name: req.name },
     });
 
@@ -58,7 +58,7 @@ export class AuthService {
       );
     }
 
-    const token = await this.jwtService.sign({ name: user.name, sub: user.id });
+    const token: string = await this.jwtService.sign({ name: user.name, sub: user.id });
 
     res.cookie('auth-cookie', token, { httpOnly: true });
 

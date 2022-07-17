@@ -20,8 +20,8 @@ export class RecipeService {
     userId: number,
   ): Promise<Recipe> {
     try {
-      const date = Date.now();
-      const newName = userId + '-' + new Date(date).toISOString() + '.png';
+      const date: number = Date.now();
+      const newName: string = userId + '-' + new Date(date).toISOString() + '.png';
       fs.rename(
         join(__dirname, '..', '..', 'uploads', 'recipes') +
           '/' +
@@ -34,7 +34,7 @@ export class RecipeService {
         },
       );
       image.filename = newName;
-      const recipe = await this.recipeRepository.create({
+      const recipe: Recipe = await this.recipeRepository.create({
         ...createRecipeDto,
         user_id: userId,
         image: image.filename,
@@ -52,7 +52,7 @@ export class RecipeService {
   }
 
   async findAll(body: FindAllRecipeDto): Promise<Recipe[]> {
-    const search = body.search;
+    const search: string[] = body.search;
 
     const query: object[] = [];
 
@@ -64,7 +64,7 @@ export class RecipeService {
       }
     }
 
-    const recipes = await this.recipeRepository.findAll({
+    const recipes: Recipe[] = await this.recipeRepository.findAll({
       where: {
         ingredients: {
           [Op.and]: query,
@@ -83,7 +83,7 @@ export class RecipeService {
   }
 
   async findAllUser(id: number): Promise<Recipe[]> {
-    const recipes = await this.recipeRepository.findAll({
+    const recipes: Recipe[] = await this.recipeRepository.findAll({
       where: { user_id: id },
     });
     if (recipes.length <= 0) {
@@ -96,7 +96,7 @@ export class RecipeService {
   }
 
   async findOne(id: number): Promise<Recipe> {
-    const recipe = await this.recipeRepository.findOne({ where: { id } });
+    const recipe: Recipe = await this.recipeRepository.findOne({ where: { id } });
     if (!recipe) {
       throw new HttpException(
         { message: 'Não foi possível encontrar a receita' },
@@ -111,7 +111,7 @@ export class RecipeService {
     updateRecipeDto: UpdateRecipeDto,
     userId: number,
   ): Promise<Recipe> {
-    const recipe = await this.recipeRepository.findOne({
+    const recipe: Recipe = await this.recipeRepository.findOne({
       where: { id: id, user_id: userId },
     });
     if (!recipe) {
@@ -124,7 +124,7 @@ export class RecipeService {
   }
 
   async remove(id: number, userId: number): Promise<{ message: string }> {
-    const recipe = await this.recipeRepository.findOne({
+    const recipe: Recipe = await this.recipeRepository.findOne({
       where: { id: id, user_id: userId },
     });
     if (!recipe) {

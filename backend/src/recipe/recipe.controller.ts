@@ -75,7 +75,7 @@ export class RecipeController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  remove(@Param('id') id: string, @Req() req): Promise<{ message: string }> {
-    return this.recipeService.remove(+id, req.user.sub);
+  async remove(@Param('id') id: string, @Req() req): Promise<{ message: string }> {
+    return await this.recipeService.remove(+id, req.user.sub);
   }
 }
