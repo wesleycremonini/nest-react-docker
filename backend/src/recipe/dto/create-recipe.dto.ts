@@ -33,5 +33,6 @@ export class CreateRecipeDto {
   category: number;
 
   @IsNotEmpty({ message: "Tags é obrigatório." })
+  @IsString({ each: true, message: "Ingredientes contém caracteres inválidos." })
   tags: string;
 }
