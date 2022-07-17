@@ -64,24 +64,76 @@ export class RecipeService {
       }
     }
 
-    return await this.recipeRepository.findAll({
+    const recipes = await this.recipeRepository.findAll({
       where: {
         ingredients: {
           [Op.and]: query,
         },
       },
     });
+
+    if (recipes.length <= 0) {
+      throw new HttpException(
+        { message: 'Nenhuma receita encontrada' },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return recipes;
   }
 
-  findOne(id: number) {
-    return this.recipeRepository.findOne({ where: { id } });
-  }
-  
-  update(id: number, updateRecipeDto: UpdateRecipeDto) {
-    return `This action updates a #${id} ${updateRecipeDto} recipe`;
+  async findAllUser(id: number): Promise<Recipe[]> {
+    const recipes = await this.recipeRepository.findAll({
+      where: { user_id: id },
+    });
+    if (recipes.length <= 0) {
+      throw new HttpException(
+        { message: 'Nenhuma receita encontrada' },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return recipes;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} recipe`;
+  async findOne(id: number): Promise<Recipe> {
+    const recipe = await this.recipeRepository.findOne({ where: { id } });
+    if (!recipe) {
+      throw new HttpException(
+        { message: 'Não foi possível encontrar a receita' },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return recipe;
+  }
+
+  async update(
+    id: number,
+    updateRecipeDto: UpdateRecipeDto,
+    userId: number,
+  ): Promise<Recipe> {
+    const recipe = await this.recipeRepository.findOne({
+      where: { id: id, user_id: userId },
+    });
+    if (!recipe) {
+      throw new HttpException(
+        { message: 'Não foi possível encontrar a receita' },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    return await recipe.update(updateRecipeDto);
+  }
+
+  async remove(id: number, userId: number): Promise<{ message: string }> {
+    const recipe = await this.recipeRepository.findOne({
+      where: { id: id, user_id: userId },
+    });
+    if (!recipe) {
+      throw new HttpException(
+        { message: 'Não foi possível encontrar a receita' },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+    await recipe.destroy();
+    return { message: 'Receita removida com sucesso' };
   }
 }

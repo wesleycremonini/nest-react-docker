@@ -38,7 +38,11 @@ export class RecipeController {
     @Body() createRecipeDto: CreateRecipeDto,
     @UploadedFile(new ImageValidationPipe()) image: any,
   ) {
-    return await this.recipeService.create(createRecipeDto, image, req.user.sub);
+    return await this.recipeService.create(
+      createRecipeDto,
+      image,
+      req.user.sub,
+    );
   }
 
   @Get('/')
@@ -47,19 +51,31 @@ export class RecipeController {
     return await this.recipeService.findAll(body);
   }
 
+  @Get('/user')
+  @UseGuards(AuthGuard('jwt'))
+  async findAllUser(@Req() req): Promise<Recipe[]> {
+    return await this.recipeService.findAllUser(req.user.sub);
+  }
+
   @Get(':id')
   @UseGuards(AuthGuard('jwt'))
-  findOne(@Param('id') id: string) {
-    return this.recipeService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<Recipe> {
+    return await this.recipeService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRecipeDto: UpdateRecipeDto) {
-    return this.recipeService.update(+id, updateRecipeDto);
+  @UseGuards(AuthGuard('jwt'))
+  async update(
+    @Param('id') id: string,
+    @Req() req,
+    @Body() updateRecipeDto: UpdateRecipeDto,
+  ): Promise<Recipe> {
+    return await this.recipeService.update(+id, updateRecipeDto, req.user.sub);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.recipeService.remove(+id);
+  @UseGuards(AuthGuard('jwt'))
+  remove(@Param('id') id: string, @Req() req): Promise<{ message: string }> {
+    return this.recipeService.remove(+id, req.user.sub);
   }
 }
